@@ -31,6 +31,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // Preload next image
+  useEffect(() => {
+    const nextIndex = (currentImageIndex + 1) % heroImages.length;
+    const img = new Image();
+    img.src = heroImages[nextIndex];
+  }, [currentImageIndex]);
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -41,6 +48,7 @@ export default function Home() {
               key={currentImageIndex}
               src={heroImages[currentImageIndex]}
               alt="School Life"
+              fetchPriority={currentImageIndex === 0 ? "high" : "auto"}
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
@@ -148,6 +156,8 @@ export default function Home() {
                 <img
                   src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2022&q=80"
                   alt="Students in classroom"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-auto object-cover"
                 />
                 <div className="absolute inset-0 bg-navy-900/10 mix-blend-multiply" />

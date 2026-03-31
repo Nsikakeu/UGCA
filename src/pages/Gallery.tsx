@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, Play } from "lucide-react";
 
 type GalleryItem = {
@@ -50,9 +50,9 @@ const galleryImages: GalleryItem[] = [
   },
   {
     id: 7,
-    src: "https://images.unsplash.com/photo-1427504746696-ea5abd7dfe5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    category: "Students",
-    title: "Sports Activities",
+    src: "https://lh3.googleusercontent.com/d/1rUSNQL0sRyYq4BOYV4sFcn_epGZblaL_",
+    category: "Events",
+    title: "Sporting Activity",
   },
   {
     id: 8,
@@ -153,6 +153,31 @@ export default function Gallery() {
     setSelectedImage(filteredImages[prevIndex]);
   };
 
+  // Preload next and previous images when lightbox is open
+  useEffect(() => {
+    if (!selectedImage) return;
+    const currentIndex = filteredImages.findIndex(
+      (img) => img.id === selectedImage.id,
+    );
+    if (currentIndex === -1) return;
+
+    const nextIndex = (currentIndex + 1) % filteredImages.length;
+    const prevIndex =
+      (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+
+    const nextImg = filteredImages[nextIndex];
+    if (nextImg && nextImg.type !== "video") {
+      const img = new Image();
+      img.src = nextImg.src;
+    }
+
+    const prevImg = filteredImages[prevIndex];
+    if (prevImg && prevImg.type !== "video") {
+      const img = new Image();
+      img.src = prevImg.src;
+    }
+  }, [selectedImage, filteredImages]);
+
   return (
     <div className="bg-slate-50 min-h-screen">
       {/* Header */}
@@ -216,6 +241,7 @@ export default function Gallery() {
                       <iframe
                         src={image.src}
                         allow="autoplay; fullscreen"
+                        loading="lazy"
                         className="w-full h-full border-0"
                       />
                     ) : (
@@ -223,6 +249,8 @@ export default function Gallery() {
                         <img
                           src={image.thumbnail || image.src}
                           alt={image.title}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                         <div className="absolute inset-0 bg-navy-900/0 group-hover:bg-navy-900/40 transition-colors duration-300 flex items-center justify-center">
@@ -301,12 +329,15 @@ export default function Gallery() {
                 <iframe
                   src={selectedImage.src}
                   allow="autoplay; fullscreen"
+                  loading="lazy"
                   className="w-full h-full border-0"
                 />
               ) : (
                 <img
                   src={selectedImage.src}
                   alt={selectedImage.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-contain max-h-[85vh] bg-black"
                 />
               )}
