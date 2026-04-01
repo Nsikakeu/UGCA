@@ -40,6 +40,14 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden">
+      {/* Announcement Marquee */}
+      <div className="bg-gold-500 text-navy-900 py-2 overflow-hidden flex items-center">
+        <div className="animate-marquee font-semibold text-sm md:text-base">
+          We have closed for Second Term on 27th March, 2026 to resume for Third
+          Term on 20th April, 2026.
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center bg-navy-900 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
