@@ -1,26 +1,38 @@
-import { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Loading from './components/Loading';
+import { Suspense, lazy } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Loading from "./components/Loading";
+import Maintenance from "./pages/Maintenance";
+
+// --- MAINTENANCE MODE TOGGLE ---
+// Set this to `true` when you are upgrading the site.
+// It will block all routes and show the "Back Soon" screen.
+const IS_MAINTENANCE_MODE = true;
 
 // Lazy load pages for better performance
-const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'));
-const Admissions = lazy(() => import('./pages/Admissions'));
-const Contact = lazy(() => import('./pages/Contact'));
-const Gallery = lazy(() => import('./pages/Gallery'));
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Admissions = lazy(() => import("./pages/Admissions"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Gallery = lazy(() => import("./pages/Gallery"));
 
 // Lazy load portal pages
-const PortalLogin = lazy(() => import('./pages/portal/Login'));
-const StaffLogin = lazy(() => import('./pages/portal/StaffLogin'));
-const StudentLogin = lazy(() => import('./pages/portal/StudentLogin'));
-const CheckResult = lazy(() => import('./pages/portal/CheckResult'));
-const SuperAdminDashboard = lazy(() => import('./pages/portal/SuperAdminDashboard'));
-const AdminDashboard = lazy(() => import('./pages/portal/AdminDashboard'));
-const TeacherDashboard = lazy(() => import('./pages/portal/TeacherDashboard'));
-const StudentDashboard = lazy(() => import('./pages/portal/StudentDashboard'));
+const PortalLogin = lazy(() => import("./pages/portal/Login"));
+const StaffLogin = lazy(() => import("./pages/portal/StaffLogin"));
+const StudentLogin = lazy(() => import("./pages/portal/StudentLogin"));
+const CheckResult = lazy(() => import("./pages/portal/CheckResult"));
+const SuperAdminDashboard = lazy(
+  () => import("./pages/portal/SuperAdminDashboard"),
+);
+const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
+const TeacherDashboard = lazy(() => import("./pages/portal/TeacherDashboard"));
+const StudentDashboard = lazy(() => import("./pages/portal/StudentDashboard"));
 
 export default function App() {
+  if (IS_MAINTENANCE_MODE) {
+    return <Maintenance />;
+  }
+
   return (
     <BrowserRouter>
       <Suspense fallback={<Loading />}>
@@ -34,7 +46,7 @@ export default function App() {
             {/* Fallback for 404 */}
             <Route path="*" element={<Home />} />
           </Route>
-          
+
           {/* Portal Routes */}
           <Route path="/portal">
             <Route index element={<PortalLogin />} />

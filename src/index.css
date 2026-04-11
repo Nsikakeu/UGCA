@@ -39,6 +39,10 @@
   animation: marquee 20s linear infinite;
 }
 
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
